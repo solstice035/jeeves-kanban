@@ -1152,6 +1152,19 @@
                 }).join('')}</div>`
                 : '';
 
+            const linksHTML = task.links && task.links.length > 0
+                ? `<div class="card-links">${task.links.map(link => {
+                    const icon = getLinkIcon(link.type);
+                    const linkTitleEl = document.createElement('div');
+                    linkTitleEl.textContent = link.title || link.url;
+                    const safeLinkTitle = linkTitleEl.innerHTML;
+                    return `<a href="${link.url}" class="card-link" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer">
+                        <span class="card-link-icon">${icon}</span>
+                        <span>${safeLinkTitle}</span>
+                    </a>`;
+                }).join('')}</div>`
+                : '';
+
             const dateHTML = task.created_at
                 ? `<div class="card-meta"><div class="card-date">Added ${formatDate(task.created_at)}</div></div>`
                 : '';
@@ -1160,10 +1173,22 @@
                 <div class="card" draggable="true" data-id="${task.id}" onclick="openEditModal(${task.id}, event)">
                     <div class="card-title">${safeTitle}</div>
                     ${descHTML}
+                    ${linksHTML}
                     ${tagsHTML}
                     ${dateHTML}
                 </div>
             `;
+        }
+
+        // Get icon for link type
+        function getLinkIcon(type) {
+            const icons = {
+                'obsidian': '📓',
+                'image': '🖼️',
+                'file': '📄',
+                'url': '🔗'
+            };
+            return icons[type] || '🔗';
         }
 
         // Drag and drop
@@ -1220,13 +1245,74 @@
             }
         }
 
+        // Link management
+        let currentLinks = [];
+
+        function addLink() {
+            const type = document.getElementById('linkType').value;
+            const url = document.getElementById('linkUrl').value.trim();
+            const title = document.getElementById('linkTitle').value.trim();
+
+            if (!url) {
+                alert('Please enter a URL or path');
+                return;
+            }
+
+            const link = {
+                type: type,
+                url: url,
+                title: title || url
+            };
+
+            currentLinks.push(link);
+            renderLinks();
+
+            // Clear inputs
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkTitle').value = '';
+        }
+
+        function removeLink(index) {
+            currentLinks.splice(index, 1);
+            renderLinks();
+        }
+
+        function renderLinks() {
+            const linksList = document.getElementById('linksList');
+            if (currentLinks.length === 0) {
+                linksList.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 8px;">No links added</div>';
+                return;
+            }
+
+            linksList.innerHTML = currentLinks.map((link, index) => `
+                <div class="link-item">
+                    <span class="link-item-icon">${getLinkIcon(link.type)}</span>
+                    <div class="link-item-text">
+                        <div class="link-item-title">${escapeHtml(link.title)}</div>
+                        <div class="link-item-url">${escapeHtml(link.url)}</div>
+                    </div>
+                    <button type="button" class="link-item-remove" onclick="removeLink(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // Modal functions
         function openModal(column) {
+            currentLinks = [];
             document.getElementById('taskId').value = '';
             document.getElementById('taskColumn').value = column;
             document.getElementById('cardTitle').value = '';
             document.getElementById('cardDescription').value = '';
             document.getElementById('cardTags').value = '';
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkTitle').value = '';
+            renderLinks();
             document.getElementById('modalHeader').textContent = 'Add New Task';
             document.getElementById('submitBtn').textContent = 'Add Task';
             document.getElementById('deleteBtn').classList.add('hidden');
@@ -1241,11 +1327,15 @@
             const task = tasks.find(t => t.id === taskId);
             if (!task) return;
 
+            currentLinks = task.links || [];
             document.getElementById('taskId').value = task.id;
             document.getElementById('taskColumn').value = task.column;
             document.getElementById('cardTitle').value = task.title;
             document.getElementById('cardDescription').value = task.description || '';
             document.getElementById('cardTags').value = (task.tags || []).join(', ');
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkTitle').value = '';
+            renderLinks();
             document.getElementById('modalHeader').textContent = 'Edit Task';
             document.getElementById('submitBtn').textContent = 'Save Changes';
             document.getElementById('deleteBtn').classList.remove('hidden');
@@ -1270,6 +1360,7 @@
                     .split(',')
                     .map(t => t.trim())
                     .filter(t => t),
+                links: currentLinks,
                 column: document.getElementById('taskColumn').value
             };
 
