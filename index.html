@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeeves Task Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .column {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .column-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .column-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cards {
+            min-height: 100px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: move;
+            transition: all 0.2s;
+            border-left: 4px solid #667eea;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            color: #555;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .tag.priority {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .add-card-btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .add-card-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #555;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .export-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 5px;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Jeeves Task Board</h1>
+        <p>Collaborative task management for Nick & Jeeves</p>
+    </div>
+
+    <div class="board">
+        <div class="column" data-column="backlog">
+            <div class="column-header">
+                <span class="column-title">📥 Backlog</span>
+                <span class="column-count">0</span>
+            </div>
+            <div class="cards"></div>
+            <button class="add-card-btn" onclick="openAddCardModal('backlog')">+ Add Task</button>
+        </div>
+
+        <div class="column" data-column="ready">
+            <div class="column-header">
+                <span class="column-title">✅ Ready</span>
+                <span class="column-count">0</span>
+            </div>
+            <div class="cards"></div>
+            <button class="add-card-btn" onclick="openAddCardModal('ready')">+ Add Task</button>
+        </div>
+
+        <div class="column" data-column="in-progress">
+            <div class="column-header">
+                <span class="column-title">🚀 In Progress</span>
+                <span class="column-count">0</span>
+            </div>
+            <div class="cards"></div>
+            <button class="add-card-btn" onclick="openAddCardModal('in-progress')">+ Add Task</button>
+        </div>
+
+        <div class="column" data-column="review">
+            <div class="column-header">
+                <span class="column-title">👀 Review</span>
+                <span class="column-count">0</span>
+            </div>
+            <div class="cards"></div>
+            <button class="add-card-btn" onclick="openAddCardModal('review')">+ Add Task</button>
+        </div>
+
+        <div class="column" data-column="done">
+            <div class="column-header">
+                <span class="column-title">🎉 Done</span>
+                <span class="column-count">0</span>
+            </div>
+            <div class="cards"></div>
+        </div>
+    </div>
+
+    <div class="export-section">
+        <button class="export-btn" onclick="exportData()">💾 Export Data</button>
+        <button class="export-btn" onclick="importData()">📥 Import Data</button>
+        <button class="export-btn" onclick="clearBoard()">🗑️ Clear Board</button>
+    </div>
+
+    <div class="modal" id="addCardModal">
+        <div class="modal-content">
+            <div class="modal-header">Add New Task</div>
+            <form id="addCardForm">
+                <div class="form-group">
+                    <label>Task Title *</label>
+                    <input type="text" id="cardTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="cardDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tags (comma-separated)</label>
+                    <input type="text" id="cardTags" placeholder="e.g., automation, urgent, client-work">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddCardModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentColumn = '';
+        let tasks = JSON.parse(localStorage.getItem('jeeves-tasks') || '[]');
+
+        // Initialize board
+        function init() {
+            renderBoard();
+            initDragAndDrop();
+            
+            // Add initial tasks if board is empty
+            if (tasks.length === 0) {
+                addInitialTasks();
+            }
+        }
+
+        function addInitialTasks() {
+            const initialTasks = [
+                {
+                    id: Date.now() + 1,
+                    title: 'Phase 1: Project Intelligence Dashboard',
+                    description: 'Create living dashboard with project status, blockers, next steps, and recent activity',
+                    tags: ['overnight-challenge', 'automation', 'phase1'],
+                    column: 'backlog'
+                },
+                {
+                    id: Date.now() + 2,
+                    title: 'Phase 2: Meeting Intelligence System',
+                    description: 'Scan all meetings, extract actions/decisions/follow-ups, create master action tracker',
+                    tags: ['overnight-challenge', 'meetings', 'phase2'],
+                    column: 'backlog'
+                },
+                {
+                    id: Date.now() + 3,
+                    title: 'Phase 3: Client Intelligence Briefs',
+                    description: 'Build "Client at a Glance" pages for EY and JPMC with contacts, history, ongoing work',
+                    tags: ['overnight-challenge', 'clients', 'phase3'],
+                    column: 'backlog'
+                },
+                {
+                    id: Date.now() + 4,
+                    title: 'Phase 4: Automation Scripts',
+                    description: 'Daily standup generator, weekly review automation, project health checker, vault maintenance',
+                    tags: ['overnight-challenge', 'automation', 'phase4'],
+                    column: 'backlog'
+                },
+                {
+                    id: Date.now() + 5,
+                    title: 'Phase 5: Vault Intelligence Report',
+                    description: 'Analyze work patterns, identify knowledge gaps, suggest connections, highlight underutilized resources',
+                    tags: ['overnight-challenge', 'analysis', 'phase5'],
+                    column: 'backlog'
+                },
+                {
+                    id: Date.now() + 6,
+                    title: 'Phase 6: Enhanced Personal Skills',
+                    description: 'Optimize skills for specific projects and workflows, create custom automation',
+                    tags: ['overnight-challenge', 'skills', 'phase6'],
+                    column: 'backlog'
+                }
+            ];
+            
+            tasks = initialTasks;
+            saveTasks();
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const columns = ['backlog', 'ready', 'in-progress', 'review', 'done'];
+            
+            columns.forEach(column => {
+                const columnEl = document.querySelector(`[data-column="${column}"]`);
+                const cardsEl = columnEl.querySelector('.cards');
+                const countEl = columnEl.querySelector('.column-count');
+                
+                const columnTasks = tasks.filter(t => t.column === column);
+                countEl.textContent = columnTasks.length;
+                
+                cardsEl.innerHTML = columnTasks.map(task => `
+                    <div class="card" draggable="true" data-id="${task.id}">
+                        <div class="card-title">${task.title}</div>
+                        ${task.description ? `<div class="card-description">${task.description}</div>` : ''}
+                        ${task.tags && task.tags.length > 0 ? `
+                            <div class="card-tags">
+                                ${task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            });
+        }
+
+        function initDragAndDrop() {
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            });
+            
+            document.querySelectorAll('.cards').forEach(container => {
+                container.addEventListener('dragover', handleDragOver);
+                container.addEventListener('drop', handleDrop);
+            });
+        }
+
+        let draggedCard = null;
+
+        function handleDragStart(e) {
+            draggedCard = e.target;
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const taskId = parseInt(draggedCard.dataset.id);
+            const newColumn = e.target.closest('.column').dataset.column;
+            
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.column = newColumn;
+                saveTasks();
+                renderBoard();
+                initDragAndDrop();
+            }
+        }
+
+        function openAddCardModal(column) {
+            currentColumn = column;
+            document.getElementById('addCardModal').classList.add('active');
+        }
+
+        function closeAddCardModal() {
+            document.getElementById('addCardModal').classList.remove('active');
+            document.getElementById('addCardForm').reset();
+        }
+
+        document.getElementById('addCardForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('cardTitle').value;
+            const description = document.getElementById('cardDescription').value;
+            const tags = document.getElementById('cardTags').value
+                .split(',')
+                .map(t => t.trim())
+                .filter(t => t);
+            
+            const newTask = {
+                id: Date.now(),
+                title,
+                description,
+                tags,
+                column: currentColumn
+            };
+            
+            tasks.push(newTask);
+            saveTasks();
+            renderBoard();
+            initDragAndDrop();
+            closeAddCardModal();
+        });
+
+        function saveTasks() {
+            localStorage.setItem('jeeves-tasks', JSON.stringify(tasks));
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(tasks, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `jeeves-tasks-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        tasks = JSON.parse(event.target.result);
+                        saveTasks();
+                        renderBoard();
+                        initDragAndDrop();
+                        alert('Tasks imported successfully!');
+                    } catch (err) {
+                        alert('Error importing tasks. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function clearBoard() {
+            if (confirm('Are you sure you want to clear all tasks? This cannot be undone.')) {
+                tasks = [];
+                saveTasks();
+                renderBoard();
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
