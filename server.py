@@ -42,6 +42,8 @@ MAX_TAG_LENGTH = 50
 MAX_LINKS = 50
 MAX_LINK_URL_LENGTH = 2000
 MAX_LINK_TITLE_LENGTH = 200
+PRIORITY_MIN = 1
+PRIORITY_MAX = 4
 
 app = Flask(__name__, static_folder=str(DIRECTORY))
 
@@ -95,6 +97,7 @@ def task_to_dict(task: Dict[str, Any]) -> Dict[str, Any]:
         'description': task['description'] or '',
         'tags': task['tags'] or [],
         'links': task.get('links', []) or [],
+        'priority': task.get('priority', 2),
         'column': task['column_name'],
         'position': task['position'],
         'created_at': task['created_at'].isoformat() if task['created_at'] else None,
@@ -148,6 +151,13 @@ def validate_task_data(data: Dict[str, Any], require_title: bool = True) -> Opti
             return "Position must be an integer"
         if data['position'] < 0:
             return "Position must be non-negative"
+
+    # Validate priority
+    if 'priority' in data:
+        if not isinstance(data['priority'], int):
+            return "Priority must be an integer"
+        if data['priority'] < PRIORITY_MIN or data['priority'] > PRIORITY_MAX:
+            return f"Priority must be between {PRIORITY_MIN} and {PRIORITY_MAX}"
 
     # Validate links
     if 'links' in data and data['links']:
@@ -206,7 +216,7 @@ def get_tasks():
         conn = get_db()
         cur = conn.cursor()
         cur.execute("""
-            SELECT id, title, description, tags, links, column_name, position,
+            SELECT id, title, description, tags, links, priority, column_name, position,
                    created_at, updated_at
             FROM kanban_tasks
             ORDER BY column_name, position, id
@@ -258,14 +268,15 @@ def create_task():
         next_pos = cur.fetchone()['next_pos']
 
         cur.execute("""
-            INSERT INTO kanban_tasks (title, description, tags, links, column_name, position)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            RETURNING id, title, description, tags, links, column_name, position, created_at, updated_at
+            INSERT INTO kanban_tasks (title, description, tags, links, priority, column_name, position)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            RETURNING id, title, description, tags, links, priority, column_name, position, created_at, updated_at
         """, (
             data['title'],
             data.get('description', ''),
             data.get('tags', []),
             data.get('links', []),
+            data.get('priority', 2),
             column,
             next_pos
         ))
@@ -317,6 +328,7 @@ def update_task(task_id):
             'description': 'description',
             'tags': 'tags',
             'links': 'links',
+            'priority': 'priority',
             'column': 'column_name',
             'position': 'position'
         }
@@ -339,7 +351,7 @@ def update_task(task_id):
             UPDATE kanban_tasks
             SET {', '.join(updates)}
             WHERE id = %s
-            RETURNING id, title, description, tags, links, column_name, position, created_at, updated_at
+            RETURNING id, title, description, tags, links, priority, column_name, position, created_at, updated_at
         """
 
         cur.execute(query, values)
@@ -437,13 +449,14 @@ def import_tasks():
 
             try:
                 cur.execute("""
-                    INSERT INTO kanban_tasks (title, description, tags, links, column_name, position)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO kanban_tasks (title, description, tags, links, priority, column_name, position)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
                     task['title'],
                     task.get('description', ''),
                     task.get('tags', []),
                     task.get('links', []),
+                    task.get('priority', 2),
                     task.get('column', 'backlog'),
                     task.get('position', 0)
                 ))

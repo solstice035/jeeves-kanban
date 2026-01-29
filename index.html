@@ -348,7 +348,14 @@
 
         .cards {
             padding: 14px;
-            min-height: 150px;
+            min-height: 200px;
+            transition: background-color 0.2s ease;
+        }
+
+        .column.drag-over .cards {
+            background-color: rgba(255, 46, 0, 0.05);
+            border: 2px dashed var(--accent);
+            margin: -2px;
         }
 
         .card {
@@ -1095,6 +1102,16 @@
                     <textarea id="cardDescription"></textarea>
                 </div>
                 <div class="form-group">
+                    <label>Status</label>
+                    <select id="cardStatus" class="link-type-select">
+                        <option value="backlog">Backlog</option>
+                        <option value="ready">Ready</option>
+                        <option value="in-progress">Active</option>
+                        <option value="review">Review</option>
+                        <option value="done">Complete</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Priority</label>
                     <select id="cardPriority" class="link-type-select">
                         <option value="1">🟢 Low</option>
@@ -1322,9 +1339,11 @@
                 card.addEventListener('dragend', handleDragEnd);
             });
 
-            document.querySelectorAll('.cards').forEach(container => {
-                container.addEventListener('dragover', handleDragOver);
-                container.addEventListener('drop', handleDrop);
+            // Make entire columns droppable, not just .cards
+            document.querySelectorAll('.column').forEach(column => {
+                column.addEventListener('dragover', handleDragOver);
+                column.addEventListener('dragleave', handleDragLeave);
+                column.addEventListener('drop', handleDrop);
             });
         }
 
@@ -1341,14 +1360,34 @@
         function handleDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
+
+            // Add visual feedback to the column
+            const column = e.target.closest('.column');
+            if (column && !column.classList.contains('drag-over')) {
+                column.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            // Only remove highlight if leaving the column entirely
+            const column = e.target.closest('.column');
+            if (column && e.target === column) {
+                column.classList.remove('drag-over');
+            }
         }
 
         async function handleDrop(e) {
             e.preventDefault();
             if (!draggedCard) return;
 
+            const column = e.target.closest('.column');
+            if (!column) return;
+
+            // Remove visual feedback
+            column.classList.remove('drag-over');
+
             const taskId = parseInt(draggedCard.dataset.id);
-            const newColumn = e.target.closest('.column').dataset.column;
+            const newColumn = column.dataset.column;
 
             try {
                 const response = await fetch(`${API_BASE}/${taskId}`, {
@@ -1433,6 +1472,7 @@
             document.getElementById('cardDescription').value = '';
             document.getElementById('cardTags').value = '';
             document.getElementById('cardPriority').value = '2';
+            document.getElementById('cardStatus').value = column;
             document.getElementById('linkUrl').value = '';
             document.getElementById('linkTitle').value = '';
             renderLinks();
@@ -1457,6 +1497,7 @@
             document.getElementById('cardDescription').value = task.description || '';
             document.getElementById('cardTags').value = (task.tags || []).join(', ');
             document.getElementById('cardPriority').value = task.priority || 2;
+            document.getElementById('cardStatus').value = task.column;
             document.getElementById('linkUrl').value = '';
             document.getElementById('linkTitle').value = '';
             renderLinks();
@@ -1486,7 +1527,7 @@
                     .filter(t => t),
                 links: currentLinks,
                 priority: parseInt(document.getElementById('cardPriority').value),
-                column: document.getElementById('taskColumn').value
+                column: document.getElementById('cardStatus').value
             };
 
             try {
