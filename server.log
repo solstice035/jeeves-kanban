@@ -1,0 +1,79 @@
+2026-01-29 21:34:11,787 - __main__ - INFO - Database connection pool created successfully
+
+============================================================
+🎯 Jeeves Kanban Board Server (Flask + PostgreSQL)
+============================================================
+
+✅ Server starting...
+
+📱 Access from this computer:
+   http://localhost:8888/
+   http://127.0.0.1:8888/
+
+🌐 Access from other devices on your network:
+   http://192.168.1.224:8888/
+
+🛑 Press Ctrl+C to stop the server
+
+============================================================
+
+ * Serving Flask app 'server'
+ * Debug mode: off
+2026-01-29 21:34:11,802 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8888
+ * Running on http://192.168.1.224:8888
+2026-01-29 21:34:11,802 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-29 21:34:16,067 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:16] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:34:22,152 - __main__ - INFO - Created task 10: Test Task
+2026-01-29 21:34:22,152 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:22] "[35m[1mPOST /api/tasks HTTP/1.1[0m" 201 -
+2026-01-29 21:34:26,488 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:26] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:34:42,841 - __main__ - INFO - Updated task 10
+2026-01-29 21:34:42,841 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:42] "PUT /api/tasks/10 HTTP/1.1" 200 -
+2026-01-29 21:34:48,205 - __main__ - INFO - Deleted task 10
+2026-01-29 21:34:48,205 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:48] "DELETE /api/tasks/10 HTTP/1.1" 200 -
+2026-01-29 21:34:49,314 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:49] "[31m[1mPOST /api/tasks HTTP/1.1[0m" 400 -
+2026-01-29 21:34:50,283 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:50] "[31m[1mPOST /api/tasks HTTP/1.1[0m" 400 -
+2026-01-29 21:34:54,758 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:54] "[31m[1mPOST /api/tasks HTTP/1.1[0m" 400 -
+2026-01-29 21:34:55,667 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:34:55] "[33mPUT /api/tasks/999 HTTP/1.1[0m" 404 -
+2026-01-29 21:38:29,829 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:38:29] "GET / HTTP/1.1" 200 -
+2026-01-29 21:38:30,362 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:38:30] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:39:07,805 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:07] "GET / HTTP/1.1" 200 -
+2026-01-29 21:39:07,944 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:07] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,025 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,105 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,125 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,144 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,162 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,182 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "GET / HTTP/1.1" 200 -
+2026-01-29 21:39:08,204 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,223 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,292 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,309 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,328 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2026-01-29 21:39:08,468 - werkzeug - INFO - 192.168.1.142 - - [29/Jan/2026 21:39:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-29 21:46:17,824 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:46:17] "GET / HTTP/1.1" 200 -
+2026-01-29 21:46:18,068 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:46:18] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:50:47,147 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:50:47] "GET / HTTP/1.1" 200 -
+2026-01-29 21:50:47,274 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:50:47] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:51:19,677 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:19] "GET / HTTP/1.1" 200 -
+2026-01-29 21:51:19,750 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:19] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:51:29,414 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:29] "GET / HTTP/1.1" 200 -
+2026-01-29 21:51:29,489 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:29] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:51:39,173 - __main__ - INFO - Deleted task 9
+2026-01-29 21:51:39,173 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:39] "DELETE /api/tasks/9 HTTP/1.1" 200 -
+2026-01-29 21:51:39,181 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:39] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:51:47,155 - __main__ - INFO - Updated task 2
+2026-01-29 21:51:47,155 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:51:47] "PUT /api/tasks/2 HTTP/1.1" 200 -
+2026-01-29 21:52:37,893 - __main__ - INFO - Updated task 2
+2026-01-29 21:52:37,895 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:52:37] "PUT /api/tasks/2 HTTP/1.1" 200 -
+2026-01-29 21:53:15,828 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:53:15] "GET / HTTP/1.1" 200 -
+2026-01-29 21:53:15,906 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:53:15] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:53:22,040 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:53:22] "[36mGET / HTTP/1.1[0m" 304 -
+2026-01-29 21:53:22,096 - werkzeug - INFO - 127.0.0.1 - - [29/Jan/2026 21:53:22] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:54:45,445 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:54:45] "GET / HTTP/1.1" 200 -
+2026-01-29 21:54:45,613 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:54:45] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:55:01,662 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:55:01] "GET / HTTP/1.1" 200 -
+2026-01-29 21:55:01,733 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:55:01] "GET /api/tasks HTTP/1.1" 200 -
+2026-01-29 21:55:49,915 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:55:49] "GET / HTTP/1.1" 200 -
+2026-01-29 21:55:49,990 - werkzeug - INFO - 192.168.1.224 - - [29/Jan/2026 21:55:49] "GET /api/tasks HTTP/1.1" 200 -
