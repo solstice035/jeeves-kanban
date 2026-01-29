@@ -21,6 +21,11 @@ if [ -f .server.pid ]; then
     fi
 fi
 
+# Activate virtual environment if it exists
+if [ -d "venv" ]; then
+    source venv/bin/activate
+fi
+
 # Start the server in background
 nohup python3 server.py > server.log 2>&1 &
 SERVER_PID=$!
