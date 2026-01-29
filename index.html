@@ -129,9 +129,29 @@
             color: var(--masthead-text);
             padding: 60px 40px 50px;
             border-bottom: 8px solid var(--accent);
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             overflow: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .masthead.collapsed {
+            padding: 20px 40px;
+            border-bottom-width: 4px;
+        }
+
+        .masthead.collapsed .masthead-title {
+            font-size: 1.5rem;
+        }
+
+        .masthead.collapsed .masthead-subtitle {
+            font-size: 0.75rem;
+        }
+
+        .masthead.collapsed .theme-toggle {
+            padding: 8px 12px;
+            font-size: 0.75rem;
         }
 
         .masthead::after {
@@ -233,7 +253,7 @@
         }
 
         .board-wrapper {
-            padding: 60px 40px;
+            padding: 40px 30px;
             max-width: 1800px;
             margin: 0 auto;
         }
@@ -283,7 +303,7 @@
         }
 
         .column-header {
-            padding: 30px 30px 20px;
+            padding: 20px 20px 14px;
             border-bottom: 2px solid var(--border-color);
             background: var(--bg-secondary);
             transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -298,7 +318,7 @@
 
         .column-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.01em;
@@ -327,15 +347,15 @@
         }
 
         .cards {
-            padding: 20px;
-            min-height: 200px;
+            padding: 14px;
+            min-height: 150px;
         }
 
         .card {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
-            padding: 24px;
-            margin-bottom: 16px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
             cursor: move;
             transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
             position: relative;
@@ -371,21 +391,85 @@
             transform: rotate(2deg);
         }
 
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
         .card-title {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-primary);
-            margin-bottom: 12px;
             line-height: 1.3;
             letter-spacing: -0.01em;
             transition: color 0.3s ease;
+            flex: 1;
+        }
+
+        .priority-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border: 1px solid;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .priority-1 {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border-color: #16a34a;
+        }
+
+        .priority-2 {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .priority-3 {
+            background: rgba(249, 115, 22, 0.1);
+            color: #ea580c;
+            border-color: #ea580c;
+        }
+
+        .priority-4 {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        [data-theme="dark"] .priority-1 {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        [data-theme="dark"] .priority-2 {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        [data-theme="dark"] .priority-3 {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+
+        [data-theme="dark"] .priority-4 {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
         }
 
         .card-description {
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
             transition: color 0.3s ease;
         }
 
@@ -393,8 +477,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid var(--border-color);
         }
 
@@ -410,23 +494,23 @@
         .card-links {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .card-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
+            gap: 4px;
+            padding: 4px 10px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-primary);
             text-decoration: none;
             transition: all 0.2s;
-            max-width: 200px;
+            max-width: 180px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -448,17 +532,17 @@
         .card-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .tag {
             font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 400;
             letter-spacing: 0.02em;
             background: var(--bg-primary);
             color: var(--text-primary);
-            padding: 6px 12px;
+            padding: 4px 10px;
             border: 1px solid var(--border-color);
             text-transform: lowercase;
             transition: all 0.2s;
@@ -527,9 +611,11 @@
             backdrop-filter: blur(10px);
             z-index: 1000;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             opacity: 0;
             transition: opacity 0.3s;
+            overflow-y: auto;
+            padding: 40px 0;
         }
 
         .modal.active {
@@ -541,17 +627,20 @@
             background: var(--bg-secondary);
             max-width: 600px;
             width: 90%;
+            max-height: calc(100vh - 80px);
             border: 4px solid var(--text-primary);
             position: relative;
             animation: fadeInUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-header {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            padding: 40px 40px 20px;
+            padding: 30px 30px 16px;
             color: var(--text-primary);
             border-bottom: 2px solid var(--border-color);
             letter-spacing: -0.01em;
@@ -559,11 +648,14 @@
         }
 
         .modal-form {
-            padding: 40px;
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
         }
 
         .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
@@ -669,8 +761,15 @@
 
         .link-input-group {
             display: grid;
-            grid-template-columns: auto 1fr auto auto;
-            gap: 8px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .link-input-row-1 {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
         }
 
         .link-type-select {
@@ -726,7 +825,7 @@
             display: flex;
             gap: 12px;
             justify-content: space-between;
-            padding: 0 40px 40px;
+            padding: 0 30px 30px;
         }
 
         .modal-actions-left {
@@ -996,6 +1095,15 @@
                     <textarea id="cardDescription"></textarea>
                 </div>
                 <div class="form-group">
+                    <label>Priority</label>
+                    <select id="cardPriority" class="link-type-select">
+                        <option value="1">🟢 Low</option>
+                        <option value="2" selected>🔵 Medium</option>
+                        <option value="3">🟠 High</option>
+                        <option value="4">🔴 Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Tags</label>
                     <input type="text" id="cardTags" placeholder="automation, urgent, design">
                 </div>
@@ -1003,13 +1111,15 @@
                     <label>Links</label>
                     <div id="linksList" class="links-list"></div>
                     <div class="link-input-group">
-                        <select id="linkType" class="link-type-select">
-                            <option value="obsidian">📓 Obsidian</option>
-                            <option value="image">🖼️ Image</option>
-                            <option value="file">📄 File</option>
-                            <option value="url">🔗 URL</option>
-                        </select>
-                        <input type="text" id="linkUrl" placeholder="URL or path" class="link-url-input">
+                        <div class="link-input-row-1">
+                            <select id="linkType" class="link-type-select">
+                                <option value="obsidian">📓 Obsidian</option>
+                                <option value="image">🖼️ Image</option>
+                                <option value="file">📄 File</option>
+                                <option value="url">🔗 URL</option>
+                            </select>
+                            <input type="text" id="linkUrl" placeholder="URL or path" class="link-url-input">
+                        </div>
                         <input type="text" id="linkTitle" placeholder="Title (optional)" class="link-title-input">
                         <button type="button" class="btn-add-link" onclick="addLink()">+</button>
                     </div>
@@ -1144,6 +1254,15 @@
 
             const descHTML = task.description ? `<div class="card-description">${safeDesc}</div>` : '';
 
+            const priorityLabels = {
+                1: 'Low',
+                2: 'Medium',
+                3: 'High',
+                4: 'Urgent'
+            };
+            const priority = task.priority || 2;
+            const priorityHTML = `<span class="priority-badge priority-${priority}">${priorityLabels[priority]}</span>`;
+
             const tagsHTML = task.tags && task.tags.length > 0
                 ? `<div class="card-tags">${task.tags.map(tag => {
                     const tagEl = document.createElement('div');
@@ -1171,7 +1290,10 @@
 
             return `
                 <div class="card" draggable="true" data-id="${task.id}" onclick="openEditModal(${task.id}, event)">
-                    <div class="card-title">${safeTitle}</div>
+                    <div class="card-header">
+                        <div class="card-title">${safeTitle}</div>
+                        ${priorityHTML}
+                    </div>
                     ${descHTML}
                     ${linksHTML}
                     ${tagsHTML}
@@ -1310,6 +1432,7 @@
             document.getElementById('cardTitle').value = '';
             document.getElementById('cardDescription').value = '';
             document.getElementById('cardTags').value = '';
+            document.getElementById('cardPriority').value = '2';
             document.getElementById('linkUrl').value = '';
             document.getElementById('linkTitle').value = '';
             renderLinks();
@@ -1333,6 +1456,7 @@
             document.getElementById('cardTitle').value = task.title;
             document.getElementById('cardDescription').value = task.description || '';
             document.getElementById('cardTags').value = (task.tags || []).join(', ');
+            document.getElementById('cardPriority').value = task.priority || 2;
             document.getElementById('linkUrl').value = '';
             document.getElementById('linkTitle').value = '';
             renderLinks();
@@ -1361,6 +1485,7 @@
                     .map(t => t.trim())
                     .filter(t => t),
                 links: currentLinks,
+                priority: parseInt(document.getElementById('cardPriority').value),
                 column: document.getElementById('taskColumn').value
             };
 
@@ -1489,6 +1614,22 @@
 
         // Initialize theme before anything else
         initTheme();
+
+        // Collapsing masthead on scroll
+        let lastScrollY = 0;
+        const masthead = document.querySelector('.masthead');
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+
+            if (scrollY > 100) {
+                masthead.classList.add('collapsed');
+            } else {
+                masthead.classList.remove('collapsed');
+            }
+
+            lastScrollY = scrollY;
+        });
 
         // Initialize on load
         init();
